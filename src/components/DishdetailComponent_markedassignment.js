@@ -23,34 +23,28 @@ import { LocalForm, Control, Errors } from 'react-redux-form';
         }
     }
 
-    function RenderComments({comments}) {
-/*        if(dish==null) {
-            return(<div></div>);
-        }
-        else {*/
-            //const comments=comments;
-            const comm =comments.map((comment) => {
-                return(
-                    <li key={comment.id}>
-                        <p>{comment.comment}</p>
-                        <p>-- {comment.author}
-                        &nbsp;,&nbsp;
-                        {new Intl.DateTimeFormat('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: '2-digit'
-                        }).format(new Date(comment.date))}</p>
-                    </li>
-                );
-            });
+    function RenderComments({comments, addComment, dishId}) {
+        const comm =comments.map((comment) => {
             return(
-                <div>
-                    <h4>Comments</h4>
-                    <div className="list-unstyled">{comm}</div>
-                    <CommentForm/>
-                </div>
+                <li key={comment.id}>
+                    <p>{comment.comment}</p>
+                    <p>-- {comment.author}
+                    &nbsp;,&nbsp;
+                    {new Intl.DateTimeFormat('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit'
+                    }).format(new Date(comment.date))}</p>
+                </li>
             );
-        //}
+        });
+        return(
+            <div>
+                <h4>Comments</h4>
+                <div className="list-unstyled">{comm}</div>
+                <CommentForm dishId={dishId} addComment={addComment}/>
+            </div>
+        );
     }
 
     const minLength = (len) => (val) => !(val) || val.length >= len;
@@ -71,8 +65,8 @@ class CommentForm extends Component {
     }
     
     handleSubmit(values) {
-        alert('Current State is: '+ JSON.stringify(values));
-        console.log('Current State is: '+ JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -120,8 +114,8 @@ class CommentForm extends Component {
                         </ModalBody>
                     </Modal>
                 </div>
-                <Button outline onClick={this.toggleModal} color='tranparent'>
-                    <span className="fa fa-pencil"></span> Sumbit Comments
+                <Button outline onClick={this.toggleModal}>
+                    <span className="fa fa-pencil"></span> Sumbit Comment
                 </Button>
             </div>
         );
@@ -147,7 +141,7 @@ const DishDetail = (props) => {
                     <RenderDish dish={props.dish} />    
                 </div>
                 <div className="col-12 col-md-5 m-1">
-                    <RenderComments comments={props.comments} />
+                    <RenderComments addComment={props.addComment} dishId={props.dish.id} comments={props.comments} />
                 </div>
             </div>
         </div>

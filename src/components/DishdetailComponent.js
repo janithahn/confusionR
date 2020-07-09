@@ -16,8 +16,7 @@ class CommentForm extends Component {
     }
 
     handleSubmit(values) {
-        console.log("Current state is:" + JSON.stringify(values));
-        alert("Current state is:" + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -103,7 +102,7 @@ function RenderDish({dish}) {
     }
 }
 
-function RenderComments({dish, isModalOpen, toggleModal}) {
+function RenderComments({dish, isModalOpen, toggleModal, addComment, dishId}) {
     if(dish != null) {
         const commentsVar = dish.comments.map((com) => {
             return (
@@ -122,7 +121,7 @@ function RenderComments({dish, isModalOpen, toggleModal}) {
                 <h4>Comments</h4>
                 {commentsVar}
                 <Button outline onClick={toggleModal}><span className="fa fa-pencil">Submit Comment</span></Button>
-                <CommentForm isOpen={isModalOpen} toggle={toggleModal}/>
+                <CommentForm dishId={dishId} addComment={addComment} isOpen={isModalOpen} toggle={toggleModal}/>
             </div>
         );
     }else {
@@ -170,7 +169,7 @@ class DishDetail extends Component{
                     <RenderDish dish={this.props.dish}/>
                 </div>
                 <div className="col-12 col-md-5 m-1">
-                    <RenderComments dish={this.props} isModalOpen={this.state.isModalOpen} toggleModal={this.toggleModal}/>
+                    <RenderComments addComment={this.props.addComment} dishId={this.props.dish.id} dish={this.props} isModalOpen={this.state.isModalOpen} toggleModal={this.toggleModal}/>
                 </div>
                 </div>
             </div>
