@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {Card, CardImg, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb, Button, Modal, ModalHeader, ModalBody, Label, Row, Col} from 'reactstrap';
-import {Link} from 'react-router-dom';
+import {Modal, ModalHeader, ModalBody, Label, Row, Col, Button} from 'reactstrap';
 import {Control, LocalForm, Errors} from 'react-redux-form';
 
 const required = (val) => val && val.length;
@@ -10,8 +9,6 @@ const minLength = (len) => (val) => (val) && (val.length >= len);
 class CommentForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -85,97 +82,4 @@ class CommentForm extends Component {
     }
 }
 
-function RenderDish({dish}) {
-    if(dish != null) {
-        return (
-            <Card>
-                <CardImg width="100%" src={dish.image} alt={dish.name}></CardImg>
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        );
-    }else {
-        return (
-            <div></div>
-        );
-    }
-}
-
-function RenderComments({dish, isModalOpen, toggleModal}) {
-    if(dish != null) {
-        const commentsVar = dish.comments.map((com) => {
-            return (
-                <div key={com.id}>
-                    <div className="list-unstyled">
-                        <p>{com.comment}</p>
-                    </div>
-                    <div className="list-unstyled">
-                        <p>{"--" + com.author + ", " + new Intl.DateTimeFormat('en-US',{year: 'numeric', month:'short', day:'2-digit'}).format(new Date(Date.parse(com.date)))}</p>
-                    </div>
-                </div>
-            );
-        });
-        return (
-            <div>
-                <h4>Comments</h4>
-                {commentsVar}
-                <Button outline onClick={toggleModal}><span className="fa fa-pencil">Submit Comment</span></Button>
-                <CommentForm isOpen={isModalOpen} toggle={toggleModal}/>
-            </div>
-        );
-    }else {
-        return (
-            <div></div>
-        );
-    }
-} 
-
-class DishDetail extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            isModalOpen: false
-        };
-        this.toggleModal = this.toggleModal.bind(this);
-    }
-
-    toggleModal() {
-        this.setState({
-            isModalOpen: !this.state.isModalOpen
-        });
-    }
-
-    render() {
-        return (
-            <div className="container">
-                <div className="row">
-                    <Breadcrumb>
-                        <BreadcrumbItem>
-                            <Link to="/home">Home</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem>
-                            <Link to="/menu">Menu</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
-                    </Breadcrumb>
-                    <div className="col-12">
-                        <h3>{this.props.dish.name}</h3>
-                        <hr/>
-                    </div>
-                </div>
-                <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    <RenderDish dish={this.props.dish}/>
-                </div>
-                <div className="col-12 col-md-5 m-1">
-                    <RenderComments dish={this.props} isModalOpen={this.state.isModalOpen} toggleModal={this.toggleModal}/>
-                </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-export default DishDetail;
+export default CommentForm;
