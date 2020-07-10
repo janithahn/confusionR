@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {Control, LocalForm, Errors} from 'react-redux-form';
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseUrl';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -89,13 +90,17 @@ class CommentForm extends Component {
 function RenderDish({dish}) {
     if(dish != null) {
         return (
-            <Card>
-                <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name}></CardImg>
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
+            <FadeTransform in transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
+                <Card>
+                    <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name}></CardImg>
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
         );
     }else {
         return (
@@ -108,22 +113,26 @@ function RenderComments({dish, isModalOpen, toggleModal, postComment, dishId}) {
     if(dish != null) {
         const commentsVar = dish.comments.map((com) => {
             return (
-                <div key={com.id}>
-                    <div className="list-unstyled">
-                        <p>{com.comment}</p>
+                <Fade in>
+                    <div key={com.id}>
+                        <div className="list-unstyled">
+                            <p>{com.comment}</p>
+                        </div>
+                        <div className="list-unstyled">
+                            <p>{"--" + com.author + ", " + new Intl.DateTimeFormat('en-US',{year: 'numeric', month:'short', day:'2-digit'}).format(new Date(Date.parse(com.date)))}</p>
+                        </div>
                     </div>
-                    <div className="list-unstyled">
-                        <p>{"--" + com.author + ", " + new Intl.DateTimeFormat('en-US',{year: 'numeric', month:'short', day:'2-digit'}).format(new Date(Date.parse(com.date)))}</p>
-                    </div>
-                </div>
+                </Fade>
             );
         });
         return (
             <div>
                 <h4>Comments</h4>
-                {commentsVar}
-                <Button outline onClick={toggleModal}><span className="fa fa-pencil">Submit Comment</span></Button>
-                <CommentForm dishId={dishId} postComment={postComment} isOpen={isModalOpen} toggle={toggleModal}/>
+                <Stagger in>
+                    {commentsVar}
+                    <Button outline onClick={toggleModal}><span className="fa fa-pencil">Submit Comment</span></Button>
+                    <CommentForm dishId={dishId} postComment={postComment} isOpen={isModalOpen} toggle={toggleModal}/>
+                </Stagger>
             </div>
         );
     }else {
