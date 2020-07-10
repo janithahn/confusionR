@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Card, CardImg, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb, Button, Modal, ModalHeader, ModalBody, Label, Row, Col} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Control, LocalForm, Errors} from 'react-redux-form';
+import {Loading} from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -147,33 +148,55 @@ class DishDetail extends Component{
     }
 
     render() {
-        return (
-            <div className="container">
-                <div className="row">
-                    <Breadcrumb>
-                        <BreadcrumbItem>
-                            <Link to="/home">Home</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem>
-                            <Link to="/menu">Menu</Link>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
-                    </Breadcrumb>
-                    <div className="col-12">
-                        <h3>{this.props.dish.name}</h3>
-                        <hr/>
+        if(this.props.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">
+                        <Loading/>
                     </div>
                 </div>
-                <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    <RenderDish dish={this.props.dish}/>
+            );
+        }else if(this.props.errMess){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <h4>{this.props.errMess}</h4>
+                    </div>
                 </div>
-                <div className="col-12 col-md-5 m-1">
-                    <RenderComments addComment={this.props.addComment} dishId={this.props.dish.id} dish={this.props} isModalOpen={this.state.isModalOpen} toggleModal={this.toggleModal}/>
+            );
+        }else if (this.props.dish != null){
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Breadcrumb>
+                            <BreadcrumbItem>
+                                <Link to="/home">Home</Link>
+                            </BreadcrumbItem>
+                            <BreadcrumbItem>
+                                <Link to="/menu">Menu</Link>
+                            </BreadcrumbItem>
+                            <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
+                        </Breadcrumb>
+                        <div className="col-12">
+                            <h3>{this.props.dish.name}</h3>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderDish dish={this.props.dish}/>
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderComments addComment={this.props.addComment} dishId={this.props.dish.id} dish={this.props} isModalOpen={this.state.isModalOpen} toggleModal={this.toggleModal}/>
+                    </div>
+                    </div>
                 </div>
-                </div>
-            </div>
-        );
+            );
+        } else {
+            return(
+                <div></div>
+            );
+        }
     }
 }
 
