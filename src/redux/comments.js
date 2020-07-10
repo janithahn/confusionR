@@ -13,8 +13,6 @@ export const Comments = (state = {
 
         case ActionTypes.ADD_COMMENT:
             var comment = action.payload;
-            comment.id = state.comments.length;
-            comment.date = new Date().toISOString();
             return {...state, comments: state.comments.concat(comment)}; //can't change the state directly from here(unable to mutate). So we have to modify it
         
         default:
